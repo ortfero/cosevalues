@@ -429,7 +429,7 @@ namespace cosevalues {
         writer& operator = (writer&&) = default;
 
         void reserve(std::size_t n) {
-            buffer_.reserve(n);
+            buffer_.reserve(nearest_power_of_2(n));
         }
 
 
