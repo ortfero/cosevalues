@@ -250,7 +250,7 @@ namespace cosevalues {
             }
             return true;
         }
-    }; // fields
+    }; // row
     
     
     class reader {

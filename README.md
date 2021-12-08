@@ -74,7 +74,7 @@ int main() {
     }
     
     constexpr std::size_t average_line_size_estimation = 32;
-    points.reserve(maybe_reader->file_size() / average_line_size_estimation + 1);
+    points.reserve(maybe_reader->text_size() / average_line_size_estimation + 1);
     
     point p;
     for(auto& row: maybe_reader->first_to_last_rows()) {
