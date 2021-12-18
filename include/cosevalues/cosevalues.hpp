@@ -39,6 +39,31 @@
 
 namespace cosevalues {
 
+    inline std::string escape(std::string source) {
+        std::string escaped;
+        auto index = source.find_first_of('\"');
+        if(index == std::string::npos) {
+            escaped = std::move(source);
+            return escaped;
+        }
+        escaped.reserve(source.size() + 2);
+        std::string::size_type last_index = 0;
+        for(;;) {
+            escaped.append(source.data() + last_index, index - last_index + 1);
+            escaped.push_back('\"');
+            ++index;
+            if(index == source.size())
+                break;
+            last_index = index;
+            index = source.find_first_of('\"', index);
+            if(index == std::string::npos) {
+                escaped.append(source.data() + last_index, source.size() - last_index);
+                break;
+            }
+        }
+        return escaped;
+    }
+
     class reader;
     
     
