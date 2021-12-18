@@ -73,5 +73,10 @@ TEST_SUITE("cosevalues") {
         REQUIRE_EQ(w.to_string(), "1.1,-2.2,3.3\n");
     }
 
+
+    TEST_CASE("Escaping quotes") {
+        REQUIRE_EQ(cosevalues::escape("\"\" \"\" \"\""), "\"\"\"\" \"\"\"\" \"\"\"\"");
+    }
+
 }
 
