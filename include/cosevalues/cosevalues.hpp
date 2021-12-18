@@ -250,7 +250,7 @@ namespace cosevalues {
             }
             return true;
         }
-    }; // row
+    }; // fields
     
     
     class reader {
@@ -448,6 +448,7 @@ namespace cosevalues {
             }
             auto const bytes_written = fwrite(buffer_.data(), 1, buffer_.size(), file.get());
             if (bytes_written != buffer_.size()) {
+                std::printf("Buffer size %llu, written %llu\n", buffer_.size(), bytes_written);
                 ec = std::make_error_code(static_cast<std::errc>(errno));
                 return false;
             }
@@ -519,15 +520,35 @@ namespace cosevalues {
 
 
         void format_arg(char const* arg) {
-            if(arg == nullptr)
-                return;
-            auto const n = std::strlen(arg);
-            auto p = allocate(n + 2);
+            if(arg == nullptr) {
+                auto p = allocate(2);
+                *p++ = '\"';
+                *p++ = '\"';
+                free(p);
+            } else {
+                auto const n = std::strlen(arg);
+                auto p = allocate(n + 2);
+                *p++ = '\"';
+                std::memcpy(p, arg, n);
+                p += n;
+                *p++ = '\"';
+                free(p);
+            }
+        }
+
+
+        void format_arg(std::string_view arg) {
+            auto p = allocate(arg.size() + 2);
             *p++ = '\"';
-            std::memcpy(p, arg, n);
-            p += n;
+            std::memcpy(p, arg.data(), arg.size());
+            p += arg.size();
             *p++ = '\"';
             free(p);
+        }
+
+
+        void format_arg(std::string const& arg) {
+            format_arg(std::string_view{arg.data(), arg.size()});
         }
 
 
